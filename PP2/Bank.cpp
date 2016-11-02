@@ -10,9 +10,8 @@ CBank::CBank()
 CBankClient* CBank::CreateClient()
 {
 	unsigned clientId = unsigned(m_clients.size());
-	CBankClient* client = new CBankClient(this, clientId);
-	m_clients.push_back(*client);
-	return client;
+	m_clients.push_back(CBankClient(this, clientId));
+	return &m_clients.back();
 }
 
 
@@ -29,8 +28,9 @@ void CBank::UpdateClientBalance(CBankClient &client, int value)
 		<< " and initiates setting total balance to " << totalBalance
 		<< ". Must be: " << GetTotalBalance() + value << "." << std::endl;
 
-	// Check correctness of transaction through actual total balance
-	if (totalBalance != GetTotalBalance() + value) {
+	//+Check correctness of transaction through actual total balance
+	if (totalBalance < 0)
+	{
 		std::cout << "! ERROR !" << std::endl;
 	}
 
@@ -51,5 +51,5 @@ void CBank::SetTotalBalance(int value)
 
 void CBank::SomeLongOperations()
 {
-	// TODO
+	//TODO???
 }
