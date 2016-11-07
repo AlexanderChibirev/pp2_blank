@@ -23,17 +23,17 @@ public:
 	CBankClient* CreateClient();
 	void UpdateClientBalance(CBankClient& client, int value);
 	void WaitThreads();
-	void CreateThreads(size_t amountCpu);
+	void CreateThreads();
 private:
 	std::vector<CBankClient> m_clients;
 	std::vector<HANDLE> m_threads;
 	int m_totalBalance;
 	PrimitiveSynchronize m_primitiveSynchronizeType;
-	
 private:
+	
 	int GetTotalBalance();
 	void SetTotalBalance(int value);
 	void SomeLongOperations();
 	unsigned int GetSleepDuration();
-
+	size_t m_amountCpu;
 };

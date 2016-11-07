@@ -18,7 +18,7 @@ CBankClient* CBank::CreateClient()
 
 void CBank::UpdateClientBalance(CBankClient &client, int value)
 {
-	int totalBalance = this->GetTotalBalance();
+	int totalBalance = GetTotalBalance();
 	std::cout << "Client " << client.GetId() << " initiates reading total balance. Total = " << totalBalance << "." << std::endl;
 	
 	SomeLongOperations();
@@ -42,16 +42,12 @@ void CBank::UpdateClientBalance(CBankClient &client, int value)
 	SetTotalBalance(totalBalance);
 }
 
-
-
-void CBank::CreateThreads(size_t amountCpu)
+void CBank::CreateThreads()
 {
-	//m_amountCpu = amountCpu;
 	for (size_t index = 0; index < m_clients.size(); ++index)
 	{
 		auto & client = m_clients[index];
 		m_threads.push_back(CreateThread(NULL, 0, &client.ThreadFunction, &client, CREATE_SUSPENDED, NULL));
-		//SetThreadAffinityMask(m_threads.back(), GetAffinityMask(m_clients.size(), index));
 	}
 }
 

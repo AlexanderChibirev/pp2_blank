@@ -77,7 +77,7 @@ int main(int argc, char * argv[])
 	{
 		bank.CreateClient();
 	}
-	bank.CreateThreads(1);
+	bank.CreateThreads();	
 	bank.WaitThreads();
 
     return 0;

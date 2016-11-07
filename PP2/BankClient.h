@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include "Bank.h"
 
 class CBank;
 
