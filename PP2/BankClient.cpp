@@ -16,6 +16,7 @@ unsigned CBankClient::GetId()
 }
 
 
+
 DWORD WINAPI CBankClient::ThreadFunction(LPVOID lpParam)
 {
 	CBankClient *client = (CBankClient*)lpParam;

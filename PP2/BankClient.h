@@ -7,7 +7,6 @@ class CBankClient
 {
 public:
 	unsigned GetId();
-
 private:
 	CBankClient(CBank *bank, unsigned id);
 	static unsigned GetSleepDuration(CBankClient *client);
@@ -16,6 +15,7 @@ private:
 
 	friend CBank;
 
+private:
 	CBank *m_bank;
 	unsigned m_id;
 };
