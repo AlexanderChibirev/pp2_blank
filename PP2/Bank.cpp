@@ -31,9 +31,14 @@ void CBank::UpdateClientBalance(CBankClient &client, int value)
 	//+Check correctness of transaction through actual total balance
 	if (totalBalance < 0)
 	{
-		std::cout << "! ERROR !" << std::endl;
+		std::cout << std::endl << std::endl;
+		std::cout << "ERROR in operation" << std::endl;
+		std::cout << "Total balance = " << GetTotalBalance() << std::endl;
+		std::cout << "Value = " << value << std::endl;
+		std::cout << "Set Value = " << totalBalance << std::endl;
+		std::cout << "Balance not must be less zero!!!" << std::endl;
+		return;
 	}
-
 	SetTotalBalance(totalBalance);
 }
 
