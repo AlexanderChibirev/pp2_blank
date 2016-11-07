@@ -19,4 +19,5 @@ private:
 	int GetTotalBalance();
 	void SetTotalBalance(int value);
 	void SomeLongOperations();
+	unsigned int GetSleepDuration();
 };

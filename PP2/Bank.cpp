@@ -51,5 +51,10 @@ void CBank::SetTotalBalance(int value)
 
 void CBank::SomeLongOperations()
 {
-	//TODO???
+	Sleep(GetSleepDuration());
+}
+
+unsigned int CBank::GetSleepDuration()
+{
+	return rand() % 100;
 }
