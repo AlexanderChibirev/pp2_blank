@@ -1,11 +1,12 @@
 #include "Bank.h"
 
-CBank::CBank()
-{
-	m_clients = std::vector<CBankClient>();
-	m_totalBalance = 0;
-}
 
+CBank::CBank(PrimitiveSynchronize type)
+{
+	m_primitiveSynchronizeType = (type);
+	m_totalBalance = (0);
+	m_clients = (std::vector<CBankClient>());
+}
 
 CBankClient* CBank::CreateClient()
 {
@@ -17,7 +18,7 @@ CBankClient* CBank::CreateClient()
 
 void CBank::UpdateClientBalance(CBankClient &client, int value)
 {
-	int totalBalance = GetTotalBalance();
+	int totalBalance = this->GetTotalBalance();
 	std::cout << "Client " << client.GetId() << " initiates reading total balance. Total = " << totalBalance << "." << std::endl;
 	
 	SomeLongOperations();
@@ -41,6 +42,27 @@ void CBank::UpdateClientBalance(CBankClient &client, int value)
 	SetTotalBalance(totalBalance);
 }
 
+
+
+void CBank::CreateThreads(size_t amountCpu)
+{
+	//m_amountCpu = amountCpu;
+	for (size_t index = 0; index < m_clients.size(); ++index)
+	{
+		auto & client = m_clients[index];
+		m_threads.push_back(CreateThread(NULL, 0, &client.ThreadFunction, &client, CREATE_SUSPENDED, NULL));
+		//SetThreadAffinityMask(m_threads.back(), GetAffinityMask(m_clients.size(), index));
+	}
+}
+
+void CBank::WaitThreads()
+{
+	for (auto & thread : m_threads)
+	{
+		ResumeThread(thread);
+	}
+	WaitForMultipleObjects(m_threads.size(), m_threads.data(), TRUE, INFINITE);
+}
 
 
 int CBank::GetTotalBalance()
