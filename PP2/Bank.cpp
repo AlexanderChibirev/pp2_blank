@@ -17,9 +17,10 @@ CBank::~CBank()
 		DeleteCriticalSection(&m_criticalSection);
 		break;
 	case PrimitiveSynchronize::Mutex:
-		m_hMutex = CreateMutex(NULL, false, NULL);
+		CloseHandle(&m_hMutex);
 		break;
 	case PrimitiveSynchronize::Semaphore:
+		
 		break;
 	case PrimitiveSynchronize::Event:
 		break;
@@ -87,7 +88,7 @@ void CBank::selectPrimitiveSynchronize()
 		InitializeCriticalSection(&m_criticalSection);
 		break;
 	case PrimitiveSynchronize::Mutex:
-		CloseHandle(&m_hMutex);
+		m_hMutex = CreateMutex(NULL, false, NULL);
 		break;
 	case PrimitiveSynchronize::Semaphore:
 		break;
