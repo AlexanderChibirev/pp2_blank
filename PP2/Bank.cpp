@@ -4,7 +4,7 @@
 CBank::CBank(PrimitiveSynchronize type)
 {
 	m_primitiveSynchronizeType = (type);
-	m_totalBalance = (0);
+	m_totalBalance = (100);
 	m_clients = (std::vector<CBankClient>());
 }
 
@@ -37,9 +37,9 @@ void CBank::UpdateClientBalance(CBankClient &client, int value)
 		std::cout << "Value = " << value << std::endl;
 		std::cout << "Set Value = " << totalBalance << std::endl;
 		std::cout << "Balance not must be less zero!!!" << std::endl;
+		SetTotalBalance(totalBalance);
 		return;
 	}
-	SetTotalBalance(totalBalance);
 }
 
 void CBank::CreateThreads()
