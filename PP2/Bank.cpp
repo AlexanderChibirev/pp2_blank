@@ -15,15 +15,40 @@ void CBank::selectPrimitiveSynchronize()
 	{
 	case PrimitiveSynchronize::CriticalSection:
 		InitializeCriticalSection(&m_criticalSection);
+		//VOID InitializeCriticalSection
+		//(
+		//	LPCRITICAL_SECTION lpCriticalSection
+		//	// указатель на переменную критическая секция
+		//);
 		break;
 	case PrimitiveSynchronize::Mutex:
 		m_hMutex = CreateMutex(NULL, false, NULL);
+		//HANDLE CreateMutex
+		//(
+		//	LPSECURITY_ATTRIBUTES lpMutexAttributes,	// атрибут безопастности
+		//	BOOL bInitialOwner,			// флаг начального владельца
+		//	LPCTSTR lpName				// имя объекта
+		//);
 		break;
 	case PrimitiveSynchronize::Semaphore:
 		m_hSemaphore = CreateSemaphore(NULL, 1, 1, NULL);
+		//HANDLE CreateSemaphore
+		//(
+		//	LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,	// атрибут доступа
+		//	LONG lInitialCount,			// инициализированное начальное состояние счетчика
+		//	LONG lMaximumCount,			// максимальное количество обращений
+		//	LPCTSTR lpName				// имя объекта
+		//);
 		break;
 	case PrimitiveSynchronize::Event:
 		m_hEvent = CreateEvent(NULL, true, false, NULL);
+		//HANDLE CreateEvent
+		//(
+		//	LPSECURITY_ATTRIBUTES lpEventAttributes,	// атрибут защиты
+		//	BOOL bManualReset,				// тип сброса TRUE - ручной
+		//	BOOL bInitialState,			// начальное состояние TRUE - сигнальное
+		//	LPCTSTR lpName				// имя обьекта
+		//);
 		break;
 	}
 }
@@ -114,7 +139,7 @@ void CBank::SetTotalBalance(int value)
 	switch (m_primitiveSynchronizeType)
 	{
 	case PrimitiveSynchronize::CriticalSection:
-		EnterCriticalSection(&m_criticalSection);
+		EnterCriticalSection(&m_criticalSection);// указатель на переменную критическая секция
 		m_totalBalance = value;
 		LeaveCriticalSection(&m_criticalSection);
 		break;
@@ -124,9 +149,15 @@ void CBank::SetTotalBalance(int value)
 		ReleaseMutex(m_hMutex);
 		break;
 	case PrimitiveSynchronize::Semaphore:
-		WaitForSingleObject(m_hSemaphore, INFINITE);
+		WaitForSingleObject(m_hSemaphore, INFINITE);//m_hSemaphore -указатель ,time
 		m_totalBalance = value;
 		ReleaseSemaphore(m_hSemaphore, 1, NULL);
+		//BOOL ReleaseSemaphore
+		//(
+		//	HANDLE hSemaphore,		// хенд семафора
+		//	LONG lReleaseCount, 	// на сколько изменять счетчик
+		//	LPLONG lpPreviousCount	// предыдущее значение
+		//);
 		break;
 	case PrimitiveSynchronize::Event:
 		SetEvent(m_hEvent);
