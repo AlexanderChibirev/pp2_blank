@@ -31,15 +31,11 @@ void CBank::UpdateClientBalance(CBankClient &client, int value)
 
 	if (totalBalance < 0)
 	{
-		std::cout << std::endl << std::endl;
 		std::cout << "ERROR in operation" << std::endl;
-		std::cout << "Total balance = " << GetTotalBalance() << std::endl;
-		std::cout << "Value = " << value << std::endl;
-		std::cout << "Set Value = " << totalBalance << std::endl;
-		std::cout << "Balance not must be less zero!!!" << std::endl;
+		SetTotalBalance(totalBalance);
 		return;
 	}
-	SetTotalBalance(totalBalance);
+	
 }
 
 void CBank::CreateThreads()
@@ -48,6 +44,7 @@ void CBank::CreateThreads()
 	{
 		auto & client = m_clients[index];
 		m_threads.push_back(CreateThread(NULL, 0, &client.ThreadFunction, &client, CREATE_SUSPENDED, NULL));
+	//CREATE_SUSPENDED after ResumeThread
 	}
 }
 
