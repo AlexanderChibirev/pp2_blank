@@ -2,10 +2,27 @@
 
 
 CBank::CBank(PrimitiveSynchronize type)
+	: m_primitiveSynchronizeType(type)
+	, m_totalBalance(0)
+	, m_clients(std::vector<CBankClient>())
 {
-	m_primitiveSynchronizeType = (type);
-	m_totalBalance = (0);
-	m_clients = (std::vector<CBankClient>());
+	selectPrimitiveSynchronize();
+}
+
+CBank::~CBank()
+{
+	switch (m_primitiveSynchronizeType)
+	{
+	case PrimitiveSynchronize::CriticalSection:
+		DeleteCriticalSection(&m_criticalSection);
+		break;
+	case PrimitiveSynchronize::Mutex:
+		break;
+	case PrimitiveSynchronize::Semaphore:
+		break;
+	case PrimitiveSynchronize::Event:
+		break;
+	}
 }
 
 CBankClient* CBank::CreateClient()
@@ -48,7 +65,6 @@ void CBank::CreateThreads()
 	{
 		auto & client = m_clients[index];
 		m_threads.push_back(CreateThread(NULL, 0, &client.ThreadFunction, &client, CREATE_SUSPENDED, NULL));
-	//CREATE_SUSPENDED after ResumeThread
 	}
 }
 
@@ -62,6 +78,22 @@ void CBank::WaitThreads()
 }
 
 
+void CBank::selectPrimitiveSynchronize() 
+{
+	switch (m_primitiveSynchronizeType)
+	{
+	case PrimitiveSynchronize::CriticalSection:
+		InitializeCriticalSection(&m_criticalSection);
+		break;
+	case PrimitiveSynchronize::Mutex:
+		break;
+	case PrimitiveSynchronize::Semaphore:
+		break;
+	case PrimitiveSynchronize::Event:
+		break;
+	}
+}
+
 int CBank::GetTotalBalance()
 {
 	return m_totalBalance;
@@ -70,7 +102,26 @@ int CBank::GetTotalBalance()
 
 void CBank::SetTotalBalance(int value)
 {
-	m_totalBalance = value;
+	switch (m_primitiveSynchronizeType)
+	{
+	case PrimitiveSynchronize::CriticalSection:
+		EnterCriticalSection(&m_criticalSection);
+		m_totalBalance = value;
+		LeaveCriticalSection(&m_criticalSection);
+		break;
+	case PrimitiveSynchronize::Mutex:
+		m_totalBalance = value;
+		break;
+	case PrimitiveSynchronize::Semaphore:
+		m_totalBalance = value;
+		break;
+	case PrimitiveSynchronize::Event:
+		m_totalBalance = value;
+		break;
+	default:
+		m_totalBalance = value;
+		break;
+	}
 }
 
 void CBank::SomeLongOperations()

@@ -19,7 +19,7 @@ class CBank
 {
 public:
 	CBank(PrimitiveSynchronize type);
-
+	~CBank();
 	CBankClient* CreateClient();
 	void UpdateClientBalance(CBankClient& client, int value);
 	void WaitThreads();
@@ -29,8 +29,9 @@ private:
 	std::vector<HANDLE> m_threads;
 	int m_totalBalance;
 	PrimitiveSynchronize m_primitiveSynchronizeType;
+	CRITICAL_SECTION m_criticalSection;
 private:
-	
+	void selectPrimitiveSynchronize() ;
 	int GetTotalBalance();
 	void SetTotalBalance(int value);
 	void SomeLongOperations();
