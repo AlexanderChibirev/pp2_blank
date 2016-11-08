@@ -32,6 +32,7 @@ private:
 	CRITICAL_SECTION m_criticalSection;
 	HANDLE m_hMutex;
 	HANDLE m_hSemaphore;
+	HANDLE m_hEvent;
 private:
 	void selectPrimitiveSynchronize() ;
 	int GetTotalBalance();

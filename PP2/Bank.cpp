@@ -23,6 +23,7 @@ void CBank::selectPrimitiveSynchronize()
 		m_hSemaphore = CreateSemaphore(NULL, 1, 1, NULL);
 		break;
 	case PrimitiveSynchronize::Event:
+		m_hEvent = CreateEvent(NULL, true, false, NULL);
 		break;
 	}
 }
@@ -43,6 +44,7 @@ CBank::~CBank()
 		CloseHandle(m_hSemaphore);
 		break;
 	case PrimitiveSynchronize::Event:
+		CloseHandle(m_hEvent);
 		break;
 	}
 }
@@ -127,7 +129,9 @@ void CBank::SetTotalBalance(int value)
 		ReleaseSemaphore(m_hSemaphore, 1, NULL);
 		break;
 	case PrimitiveSynchronize::Event:
+		SetEvent(m_hEvent);
 		m_totalBalance = value;
+		ResetEvent(m_hEvent);
 		break;
 	default:
 		m_totalBalance = value;
