@@ -30,11 +30,11 @@ private:
 	int m_totalBalance;
 	PrimitiveSynchronize m_primitiveSynchronizeType;
 	CRITICAL_SECTION m_criticalSection;
+	HANDLE m_hMutex;
 private:
 	void selectPrimitiveSynchronize() ;
 	int GetTotalBalance();
 	void SetTotalBalance(int value);
 	void SomeLongOperations();
 	unsigned int GetSleepDuration();
-	size_t m_amountCpu;
 };
