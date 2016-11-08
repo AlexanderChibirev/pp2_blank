@@ -9,6 +9,26 @@ CBank::CBank(PrimitiveSynchronize type)
 	selectPrimitiveSynchronize();
 }
 
+void CBank::selectPrimitiveSynchronize()
+{
+	switch (m_primitiveSynchronizeType)
+	{
+	case PrimitiveSynchronize::CriticalSection:
+		InitializeCriticalSection(&m_criticalSection);
+		break;
+	case PrimitiveSynchronize::Mutex:
+		m_hMutex = CreateMutex(NULL, false, NULL);
+		break;
+	case PrimitiveSynchronize::Semaphore:
+		m_hSemaphore = CreateSemaphore(NULL, 1, 1, NULL);
+		break;
+	case PrimitiveSynchronize::Event:
+		break;
+	}
+}
+
+
+
 CBank::~CBank()
 {
 	switch (m_primitiveSynchronizeType)
@@ -20,7 +40,7 @@ CBank::~CBank()
 		CloseHandle(&m_hMutex);
 		break;
 	case PrimitiveSynchronize::Semaphore:
-		
+		CloseHandle(m_hSemaphore);
 		break;
 	case PrimitiveSynchronize::Event:
 		break;
@@ -80,22 +100,6 @@ void CBank::WaitThreads()
 }
 
 
-void CBank::selectPrimitiveSynchronize() 
-{
-	switch (m_primitiveSynchronizeType)
-	{
-	case PrimitiveSynchronize::CriticalSection:
-		InitializeCriticalSection(&m_criticalSection);
-		break;
-	case PrimitiveSynchronize::Mutex:
-		m_hMutex = CreateMutex(NULL, false, NULL);
-		break;
-	case PrimitiveSynchronize::Semaphore:
-		break;
-	case PrimitiveSynchronize::Event:
-		break;
-	}
-}
 
 int CBank::GetTotalBalance()
 {
@@ -118,7 +122,9 @@ void CBank::SetTotalBalance(int value)
 		ReleaseMutex(m_hMutex);
 		break;
 	case PrimitiveSynchronize::Semaphore:
+		WaitForSingleObject(m_hSemaphore, INFINITE);
 		m_totalBalance = value;
+		ReleaseSemaphore(m_hSemaphore, 1, NULL);
 		break;
 	case PrimitiveSynchronize::Event:
 		m_totalBalance = value;
