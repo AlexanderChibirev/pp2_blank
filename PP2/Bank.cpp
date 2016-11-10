@@ -3,10 +3,10 @@
 
 CBank::CBank(PrimitiveSynchronize type)
 	: m_primitiveSynchronizeType(type)
-	, m_totalBalance(10)
+	, m_totalBalance(0)
 	, m_clients(std::vector<CBankClient>())
 {
-	//selectPrimitiveSynchronize();
+	selectPrimitiveSynchronize();
 }
 
 void CBank::selectPrimitiveSynchronize()
@@ -57,21 +57,21 @@ void CBank::selectPrimitiveSynchronize()
 
 CBank::~CBank()
 {
-	//switch (m_primitiveSynchronizeType)
-	//{
-	//case PrimitiveSynchronize::CriticalSection:
-	//	DeleteCriticalSection(&m_criticalSection);
-	//	break;
-	//case PrimitiveSynchronize::Mutex:
-	//	CloseHandle(&m_hMutex);
-	//	break;
-	//case PrimitiveSynchronize::Semaphore:
-	//	CloseHandle(m_hSemaphore);
-	//	break;
-	//case PrimitiveSynchronize::Event:
-	//	CloseHandle(m_hEvent);
-	//	break;
-	//}
+	switch (m_primitiveSynchronizeType)
+	{
+	case PrimitiveSynchronize::CriticalSection:
+		DeleteCriticalSection(&m_criticalSection);
+		break;
+	case PrimitiveSynchronize::Mutex:
+		CloseHandle(&m_hMutex);
+		break;
+	case PrimitiveSynchronize::Semaphore:
+		CloseHandle(m_hSemaphore);
+		break;
+	case PrimitiveSynchronize::Event:
+		CloseHandle(m_hEvent);
+		break;
+	}
 }
 
 CBankClient* CBank::CreateClient()
@@ -97,11 +97,15 @@ void CBank::UpdateClientBalance(CBankClient &client, int value)
 
 	if (totalBalance < 0)
 	{
-		Sleep(GetSleepDuration());
-		SetTotalBalance(totalBalance);
+		std::cout << std::endl << std::endl;
+		std::cout << "ERROR in operation" << std::endl;
+		std::cout << "Total balance = " << GetTotalBalance() << std::endl;
+		std::cout << "Value = " << value << std::endl;
+		std::cout << "Set Value = " << totalBalance << std::endl;
+		std::cout << "Balance not must be less zero!!!" << std::endl;
 		return;
 	}
-
+	SetTotalBalance(totalBalance);
 }
 
 void CBank::CreateThreads()
@@ -135,19 +139,19 @@ void CBank::SetTotalBalance(int value)
 	switch (m_primitiveSynchronizeType)
 	{
 	case PrimitiveSynchronize::CriticalSection:
-		//EnterCriticalSection(&m_criticalSection);// указатель на переменную критическая секция
+		EnterCriticalSection(&m_criticalSection);// указатель на переменную критическая секция
 		m_totalBalance = value;
-		//LeaveCriticalSection(&m_criticalSection);
+		LeaveCriticalSection(&m_criticalSection);
 		break;
 	case PrimitiveSynchronize::Mutex:
-		//WaitForSingleObject(m_hMutex, INFINITE);
+		WaitForSingleObject(m_hMutex, INFINITE);
 		m_totalBalance = value;
-	//	ReleaseMutex(m_hMutex);
+		ReleaseMutex(m_hMutex);
 		break;
 	case PrimitiveSynchronize::Semaphore:
-	//	WaitForSingleObject(m_hSemaphore, INFINITE);//m_hSemaphore -указатель ,time
+		WaitForSingleObject(m_hSemaphore, INFINITE);//m_hSemaphore -указатель ,time
 		m_totalBalance = value;
-	//	ReleaseSemaphore(m_hSemaphore, 1, NULL);
+		ReleaseSemaphore(m_hSemaphore, 1, NULL);
 		//BOOL ReleaseSemaphore
 		//(
 		//	HANDLE hSemaphore,		// хенд семафора
@@ -156,9 +160,9 @@ void CBank::SetTotalBalance(int value)
 		//);
 		break;
 	case PrimitiveSynchronize::Event:
-	//	SetEvent(m_hEvent);
+		SetEvent(m_hEvent);
 		m_totalBalance = value;
-	//	ResetEvent(m_hEvent);
+		ResetEvent(m_hEvent);
 		break;
 	default:
 		m_totalBalance = value;
@@ -173,5 +177,5 @@ void CBank::SomeLongOperations()
 
 unsigned int CBank::GetSleepDuration()
 {
-	return rand() % 1000;
+	return rand() % 100;
 }

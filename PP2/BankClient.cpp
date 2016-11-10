@@ -37,5 +37,5 @@ unsigned CBankClient::GetSleepDuration(CBankClient *client)
 unsigned CBankClient::GetBalanceChangeValue()
 {
 	// -100 .. 100
-	return -2;
+	return rand() % 201 - 100;
 }
